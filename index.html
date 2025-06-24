@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Upcoming Anime 2025-2026</title>
+<style>
+  /* Root colors for light and dark */
+  :root {
+    --bg-light: #f5f5f5;
+    --text-light: #121212;
+    --bg-dark: #121212;
+    --text-dark: #eee;
+    --accent: #ff6f61;
+    --table-header-bg: var(--accent);
+    --table-header-text: var(--text-dark);
+  }
+
+  /* Dark mode by default */
+  body {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 20px;
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+
+  body.light {
+    background: var(--bg-light);
+    color: var(--text-light);
+  }
+
+  h1 {
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 30px;
+    user-select: none;
+  }
+
+  button#toggleTheme {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    background: var(--accent);
+    color: var(--table-header-text);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 8px var(--accent);
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  button#toggleTheme:hover {
+    background: #e65a4f;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: auto;
+    max-width: 900px;
+    box-shadow: 0 0 15px rgba(255,111,97,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    animation: fadeIn 1s ease forwards;
+  }
+
+  th, td {
+    border: 1px solid #444;
+    padding: 12px 15px;
+    text-align: left;
+  }
+
+  th {
+    background-color: var(--table-header-bg);
+    color: var(--table-header-text);
+    font-weight: bold;
+  }
+
+  tr:nth-child(even) {
+    background-color: #1e1e1e;
+  }
+
+  body.light tr:nth-child(even) {
+    background-color: #eaeaea;
+  }
+
+  tr:hover {
+    background-color: #333;
+    cursor: pointer;
+  }
+  body.light tr:hover {
+    background-color: #ccc;
+  }
+
+  caption {
+    caption-side: bottom;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #bbb;
+  }
+
+  /* Fade in animation */
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  /* Modal styles */
+  #modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+  }
+  #modal.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #modalContent {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+    padding: 25px 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 0 20px var(--accent);
+    user-select: none;
+  }
+  body.light #modalContent {
+    background: var(--bg-light);
+    color: var(--text-light);
+  }
+
+  #modalContent h2 {
+    margin-top: 0;
+    color: var(--accent);
+    margin-bottom: 15px;
+  }
+
+  #modalContent p {
+    font-size: 1.2rem;
+    margin: 15px 0;
+  }
+
+  #closeBtn {
+    margin-top: 15px;
+    padding: 8px 20px;
+    background: var(--accent);
+    color: var(--table-header-text);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 8px var(--accent);
+    transition: background-color 0.3s ease;
+  }
+  #closeBtn:hover {
+    background: #e65a4f;
+  }
+</style>
+</head>
+<body>
+
+<button id="toggleTheme" aria-label="Toggle dark/light mode">Light Mode</button>
+
+<h1>Confirmed Upcoming Anime (2025–2026)</h1>
+<table id="animeTable" role="grid" aria-label="Upcoming anime list">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Type</th>
+      <th scope="col">Premiere Date / Status</th>
+      <th scope="col">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-title="Call of the Night – Season 2" data-date="2025-07-04T00:00:00" tabindex="0">
+      <td>Call of the Night – Season 2</td>
+      <td>TV Anime</td>
+      <td>July 4, 2025</td>
+      <td>Noitamina block, HIDIVE streaming</td>
+    </tr>
+    <tr data-title="Rascal Does Not Dream of Santa Claus" data-date="2025-07-05T00:00:00" tabindex="0">
+      <td>Rascal Does Not Dream of Santa Claus</td>
+      <td>TV Anime</td>
+      <td>July 5, 2025</td>
+      <td>University Arc</td>
+    </tr>
+    <tr data-title="Kaiju No. 8 – Season 2" data-date="2025-07-19T00:00:00" tabindex="0">
+      <td>Kaiju No. 8 – Season 2</td>
+      <td>TV Anime</td>
+      <td>July 19, 2025</td>
+      <td>Crunchyroll & X streaming globally</td>
+    </tr>
+    <tr data-title="My Dress-Up Darling – Season 2" data-date="2025-07-01T00:00:00" tabindex="0">
+      <td>My Dress-Up Darling – Season 2</td>
+      <td>TV Anime</td>
+      <td>July 2025 (TBA)</td>
+      <td>Marin returns</td>
+    </tr>
+    <tr data-title="Makeine: Too Many Losing Heroines! – Season 2" data-date="" tabindex="0">
+      <td>Makeine: Too Many Losing Heroines! – Season 2</td>
+      <td>TV Anime</td>
+      <td>Confirmed, Release TBA</td>
+      <td>Officially announced April 2025</td>
+    </tr>
+    <tr data-title="Tokyo Revengers – Season 4" data-date="" tabindex="0">
+      <td>Tokyo Revengers – Season 4</td>
+      <td>TV Anime</td>
+      <td>Announced, Release TBD</td>
+      <td>Santen Senso Arc, in production</td>
+    </tr>
+    <tr data-title="Re:Zero – Season 4" data-date="2026-01-01T00:00:00" tabindex="0">
+      <td>Re:Zero – Season 4</td>
+      <td>TV Anime</td>
+      <td>2026 (confirmed)</td>
+      <td>Arc 6 “Corridor of Memories”</td>
+    </tr>
+    <tr data-title="The Eminence in Shadow: Lost Echoes" data-date="" tabindex="0">
+      <td>The Eminence in Shadow: Lost Echoes</td>
+      <td>Movie</td>
+      <td>TBA</td>
+      <td>Continuation of Season 2</td>
+    </tr>
+    <tr data-title="Frieren: Beyond Journey’s End – Season 2" data-date="2026-01-15T00:00:00" tabindex="0">
+      <td>Frieren: Beyond Journey’s End – Season 2</td>
+      <td>TV Anime</td>
+      <td>January 2026</td>
+      <td>Continuing Northern Travels arc</td>
+    </tr>
+    <tr data-title="Rent-A-Girlfriend – Season 4" data-date="2025-07-05T00:00:00" tabindex="0">
+      <td>Rent-A-Girlfriend – Season 4</td>
+      <td>TV Anime</td>
+      <td>July 5, 2025</td>
+      <td>Split cours, returning director Kazuomi Koga</td>
+    </tr>
+    <tr data-title="One Punch Man – Season 3" data-date="" tabindex="0">
+      <td>One Punch Man – Season 3</td>
+      <td>TV Anime</td>
+      <td>Confirmed, Release TBA</td>
+      <td>JC Staff confirmed production in 2023</td>
+    </tr>
+    <tr data-title="Chainsaw Man – Season 2" data-date="2025-01-01T00:00:00" tabindex="0">
+      <td>Chainsaw Man – Season 2</td>
+      <td>TV Anime</td>
+      <td>2025</td>
+      <td>MAPPA announced Season 2 in July 2022</td>
+    </tr>
+    <tr data-title="Jujutsu Kaisen – Season 3" data-date="2026-01-01T00:00:00" tabindex="0">
+      <td>Jujutsu Kaisen – Season 3</td>
+      <td>TV Anime</td>
+      <td>2026</td>
+      <td>MAPPA, adapting Culling Game arc</td>
+    </tr>
+    <tr data-title="Demon Slayer – Final Arc" data-date="2024-12-31T00:00:00" tabindex="0">
+      <td>Demon Slayer – Final Arc</td>
+      <td>TV Anime</td>
+      <td>2024–2025</td>
+      <td>Continuing final story arcs</td>
+    </tr>
+    <tr data-title="Spy x Family – Season 3" data-date="2025-10-01T00:00:00" tabindex="0">
+      <td>Spy x Family – Season 3</td>
+      <td>TV Anime</td>
+      <td>October 2025</td>
+      <td>Wit Studio & CloverWorks, 12 episodes</td>
+    </tr>
+    <tr data-title="Classroom of the Elite – Season 4" data-date="2025-12-15T00:00:00" tabindex="0">
+      <td>Classroom of the Elite – Season 4</td>
+      <td>TV Anime</td>
+      <td>Late 2025 / Early 2026</td>
+      <td>Lerche, Second-year arc</td>
+    </tr>
+    <tr data-title="Hell’s Paradise – Season 2" data-date="2026-01-10T00:00:00" tabindex="0">
+      <td>Hell’s Paradise – Season 2</td>
+      <td>TV Anime</td>
+      <td>January 2026</td>
+      <td>MAPPA, adaptation of the Hōrai Arc</td>
+    </tr>
+  </tbody>
+  <caption>Compiled &amp; updated by Kyle</caption>
+</table>
+
+<!-- Modal -->
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+  <div id="modalContent">
+    <h2 id="modalTitle"></h2>
+    <p id="modalDesc"></p>
+    <button id="closeBtn" aria-label="Close countdown popup">Close</button>
+  </div>
+</div>
+
+<script>
+  const toggleBtn = document.getElementById('toggleTheme');
+  const body = document.body;
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const closeBtn = document.getElementById('closeBtn');
+
+  // Set initial mode based on saved preference or default dark
+  if(localStorage.getItem('theme') === 'light') {
+    body.classList.add('light');
+    toggleBtn.textContent = 'Dark Mode';
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    body.classList.toggle('light');
+    if(body.classList.contains('light')) {
+      toggleBtn.textContent = 'Dark Mode';
+      localStorage.setItem('theme', 'light');
+    } else {
+      toggleBtn.textContent = 'Light Mode';
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+
+  // Countdown function
+  function getCountdown(targetDate) {
+    const now = new Date();
+    const diff = targetDate - now;
+    if(diff <= 0) return null;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    return { days, hours, minutes, seconds };
+  }
+
+  // Open modal with countdown
+  // Inside your existing openModal function, add extra info:
+
+function openModal(title, dateStr, imgUrl, trailerUrl) {
+  modalTitle.textContent = title;
+  // Clear old content
+  modalDesc.innerHTML = "";
+  
+  if(imgUrl) {
+    const img = document.createElement('img');
+    img.src = imgUrl;
+    img.alt = `${title} poster`;
+    img.style.maxWidth = '100%';
+    img.style.borderRadius = '8px';
+    modalDesc.appendChild(img);
+  }
+  
+  // Countdown text (existing code)
+  if(!dateStr) {
+    modalDesc.appendChild(document.createTextNode("Release date not announced yet."));
+  } else {
+    let targetDate = new Date(dateStr);
+    if(isNaN(targetDate.getTime())) {
+      modalDesc.appendChild(document.createTextNode("Release date not announced yet."));
+    } else {
+      // Show countdown
+      const countdownEl = document.createElement('p');
+      modalDesc.appendChild(countdownEl);
+      function updateCountdown() {
+        const cd = getCountdown(targetDate);
+        if(!cd) {
+          countdownEl.textContent = "Released or airing now!";
+          clearInterval(modal.countdownInterval);
+          return;
+        }
+        countdownEl.textContent = `Countdown: ${cd.days}d ${cd.hours}h ${cd.minutes}m ${cd.seconds}s`;
+      }
+      updateCountdown();
+      modal.countdownInterval = setInterval(updateCountdown, 1000);
+
+      // Add Set Reminder button
+      const reminderBtn = document.createElement('button');
+      reminderBtn.textContent = 'Set Reminder 🔔';
+      reminderBtn.style.marginTop = '10px';
+      reminderBtn.style.padding = '8px 15px';
+      reminderBtn.style.cursor = 'pointer';
+      reminderBtn.style.borderRadius = '20px';
+      reminderBtn.style.border = 'none';
+      reminderBtn.style.backgroundColor = 'var(--accent)';
+      reminderBtn.style.color = 'var(--table-header-text)';
+      reminderBtn.onclick = () => {
+        if (!("Notification" in window)) {
+          alert("This browser does not support notifications.");
+          return;
+        }
+        if (Notification.permission === "granted") {
+          scheduleNotification(title, targetDate);
+        } else if (Notification.permission !== "denied") {
+          Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+              scheduleNotification(title, targetDate);
+            } else {
+              alert("Notification permission denied.");
+            }
+          });
+        } else {
+          alert("Notification permission denied.");
+        }
+      };
+      modalDesc.appendChild(reminderBtn);
+    }
+  }
+
+  // Trailer embed
+  if(trailerUrl) {
+    const trailerFrame = document.createElement('iframe');
+    trailerFrame.src = trailerUrl;
+    trailerFrame.width = '100%';
+    trailerFrame.height = '200';
+    trailerFrame.style.marginTop = '15px';
+    trailerFrame.setAttribute('allowfullscreen', '');
+    trailerFrame.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+    modalDesc.appendChild(trailerFrame);
+  }
+
+  modal.classList.add('show');
+}
+
+function scheduleNotification(title, targetDate) {
+  const now = new Date();
+  const delay = targetDate - now;
+  if (delay <= 0) {
+    alert("The premiere date has already passed!");
+    return;
+  }
+  alert(`Reminder set for ${title} on ${targetDate.toLocaleString()}. Keep this tab open!`);
+
+  setTimeout(() => {
+    new Notification(`${title} is premiering today!`);
+  }, delay);
+}
+  // Close modal
+  function closeModal() {
+    modal.classList.remove('show');
+    clearInterval(modal.countdownInterval);
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if(e.target === modal) closeModal();
+  });
+
+  // Add click event to table rows
+  const rows = document.querySelectorAll('#animeTable tbody tr');
+  rows.forEach(row => {
+    row.addEventListener('click', () => {
+      const title = row.getAttribute('data-title');
+      const date = row.getAttribute('data-date');
+      openModal(title, date);
+    });
+    // Keyboard accessibility (Enter key)
+    row.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const title = row.getAttribute('data-title');
+        const date = row.getAttribute('data-date');
+        openModal(title, date);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
