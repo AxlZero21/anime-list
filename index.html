@@ -5,23 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Upcoming Anime 2025-2026</title>
 <style>
-  /* Root colors for light and dark */
   :root {
     --bg-light: #f5f5f5;
     --text-light: #121212;
     --bg-dark: #121212;
     --text-dark: #eee;
     --accent: #ff6f61;
-    --table-header-bg: var(--accent);
-    --table-header-text: var(--text-dark);
+    --card-bg-dark: #1e1e1e;
+    --card-bg-light: #eaeaea;
   }
 
-  /* Dark mode by default */
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     background: var(--bg-dark);
     color: var(--text-dark);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0; padding: 20px;
+    margin: 0;
+    padding: 20px;
     transition: background-color 0.5s ease, color 0.5s ease;
   }
 
@@ -30,89 +33,340 @@
     color: var(--text-light);
   }
 
+  body.light .card-bg {
+    background: var(--card-bg-light);
+  }
+
+  .card-bg {
+    background: var(--card-bg-dark);
+  }
+
   h1 {
     text-align: center;
     color: var(--accent);
-    margin-bottom: 30px;
-    user-select: none;
+    margin-bottom: 20px;
+    font-size: 2rem;
   }
 
-  button#toggleTheme {
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  .controls select,
+  .controls input {
+    padding: 8px 14px;
+    border-radius: 25px;
+    border: 1px solid #444;
+    background: #1e1e1e;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    min-width: 100px;
+  }
+
+  body.light .controls select,
+  body.light .controls input {
+    background: white;
+    color: black;
+    border-color: #ccc;
+  }
+
+  .controls button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .controls button:hover {
+    background: #e65a4f;
+  }
+
+  .controls button.active {
+    background: #e65a4f;
+    box-shadow: 0 0 15px var(--accent);
+  }
+
+  .view-toggle {
+    display: flex;
+    gap: 4px;
+    background: #2a2a2a;
+    padding: 4px;
+    border-radius: 30px;
+  }
+
+  body.light .view-toggle {
+    background: #ddd;
+  }
+
+  .view-toggle button {
+    background: transparent;
+    color: #aaa;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.3s;
+  }
+
+  body.light .view-toggle button {
+    color: #666;
+  }
+
+  .view-toggle button.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  .view-toggle button:hover:not(.active) {
+    color: white;
+  }
+
+  body.light .view-toggle button:hover:not(.active) {
+    color: black;
+  }
+
+  #toggleTheme {
     position: fixed;
     top: 15px;
     right: 20px;
     background: var(--accent);
-    color: var(--table-header-text);
+    color: white;
     border: none;
     padding: 10px 15px;
     border-radius: 25px;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 0 0 8px var(--accent);
-    transition: background-color 0.3s ease;
-    user-select: none;
-  }
-  button#toggleTheme:hover {
-    background: #e65a4f;
+    z-index: 100;
+    font-size: 13px;
   }
 
-  table {
+  .loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.5rem;
+  }
+
+  /* Stats Bar */
+  #statsBar {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    padding: 12px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #444;
+    background: #1a1a1a;
+  }
+
+  body.light #statsBar {
+    background: #f0f0f0;
+    border-color: #ccc;
+  }
+
+  #statsBar span {
+    font-size: 14px;
+  }
+
+  #statsBar .num {
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 18px;
+  }
+
+  /* Table View */
+  #tableView {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  #tableView table {
     width: 100%;
     border-collapse: collapse;
     margin: auto;
-    max-width: 900px;
-    box-shadow: 0 0 15px rgba(255,111,97,0.2);
+    max-width: 1000px;
     border-radius: 10px;
     overflow: hidden;
-    animation: fadeIn 1s ease forwards;
   }
 
-  th, td {
+  #tableView th,
+  #tableView td {
     border: 1px solid #444;
-    padding: 12px 15px;
+    padding: 10px 14px;
     text-align: left;
+    font-size: 14px;
   }
 
-  th {
-    background-color: var(--table-header-bg);
-    color: var(--table-header-text);
+  #tableView th {
+    background-color: var(--accent);
+    color: white;
     font-weight: bold;
+    cursor: pointer;
+    user-select: none;
   }
 
-  tr:nth-child(even) {
+  #tableView th:hover {
+    opacity: 0.85;
+  }
+
+  #tableView tr:nth-child(even) {
     background-color: #1e1e1e;
   }
 
-  body.light tr:nth-child(even) {
+  body.light #tableView tr:nth-child(even) {
     background-color: #eaeaea;
   }
 
-  tr:hover {
+  #tableView tr:hover {
     background-color: #333;
     cursor: pointer;
   }
-  body.light tr:hover {
+
+  body.light #tableView tr:hover {
     background-color: #ccc;
   }
 
-  caption {
-    caption-side: bottom;
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #bbb;
+  /* Grid View */
+  #gridView {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 10px 0;
   }
 
-  /* Fade in animation */
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
+  .grid-item {
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid #333;
+    position: relative;
   }
 
-  /* Modal styles */
+  body.light .grid-item {
+    border-color: #ccc;
+  }
+
+  .grid-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  .grid-item img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .grid-item .info {
+    padding: 10px 12px;
+  }
+
+  .grid-item .info h3 {
+    margin: 0 0 4px 0;
+    font-size: 0.95rem;
+    color: var(--accent);
+  }
+
+  .grid-item .info p {
+    margin: 2px 0;
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+
+  body.light .grid-item .info p {
+    color: #555;
+  }
+
+  .grid-item .save-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .grid-item .save-btn.saved {
+    background: var(--accent);
+  }
+
+  .grid-item .save-btn:hover {
+    transform: scale(1.1);
+  }
+
+  /* Pagination */
+  #pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+
+  #pagination button {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #444;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  body.light #pagination button {
+    color: black;
+    border-color: #ccc;
+  }
+
+  #pagination button.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  #pagination button:hover:not(.active) {
+    background: #333;
+  }
+
+  body.light #pagination button:hover:not(.active) {
+    background: #ddd;
+  }
+
+  /* Modal */
   #modal {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.75);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -120,7 +374,9 @@
     pointer-events: none;
     transition: opacity 0.3s ease;
     z-index: 9999;
+    padding: 20px;
   }
+
   #modal.show {
     opacity: 1;
     pointer-events: auto;
@@ -131,11 +387,13 @@
     color: var(--text-dark);
     padding: 25px 30px;
     border-radius: 12px;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 0 20px var(--accent);
-    user-select: none;
+    max-width: 550px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
   }
+
   body.light #modalContent {
     background: var(--bg-light);
     color: var(--text-light);
@@ -144,330 +402,983 @@
   #modalContent h2 {
     margin-top: 0;
     color: var(--accent);
-    margin-bottom: 15px;
+    font-size: 1.4rem;
   }
 
-  #modalContent p {
-    font-size: 1.2rem;
-    margin: 15px 0;
+  #modalContent .modal-img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 10px 0;
   }
 
-  #closeBtn {
-    margin-top: 15px;
-    padding: 8px 20px;
-    background: var(--accent);
-    color: var(--table-header-text);
+  #modalContent .trailer-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    margin: 12px 0;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  #modalContent .trailer-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     border: none;
+  }
+
+  #modalContent .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+  }
+
+  #modalContent .modal-actions button {
+    padding: 8px 18px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    font-size: 14px;
+  }
+
+  #modalContent .modal-actions .save-modal {
+    background: var(--accent);
+    color: white;
+  }
+
+  #modalContent .modal-actions .share-modal {
+    background: #1da1f2;
+    color: white;
+  }
+
+  #modalContent .modal-actions .close-modal {
+    background: #555;
+    color: white;
+  }
+
+  body.light #modalContent .modal-actions .close-modal {
+    background: #ccc;
+    color: black;
+  }
+
+  #modalContent .modal-actions button:hover {
+    transform: scale(1.05);
+  }
+
+  /* My List Panel */
+  #myListPanel {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 350px;
+    height: 100%;
+    background: var(--bg-dark);
+    color: var(--text-dark);
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+    transition: 0.3s;
+  }
+
+  body.light #myListPanel {
+    background: var(--bg-light);
+    color: var(--text-light);
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+  }
+
+  #myListPanel.show {
+    display: block;
+  }
+
+  #myListPanel h2 {
+    color: var(--accent);
+    margin-top: 0;
+  }
+
+  #myListPanel .list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #444;
+  }
+
+  body.light #myListPanel .list-item {
+    border-color: #ccc;
+  }
+
+  #myListPanel .list-item span {
+    flex: 1;
+    margin-right: 10px;
+    font-size: 14px;
+  }
+
+  #myListPanel .list-item button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  #myListPanel .close-list {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 16px;
     border-radius: 25px;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 0 0 8px var(--accent);
-    transition: background-color 0.3s ease;
+    margin-top: 15px;
+    width: 100%;
   }
-  #closeBtn:hover {
-    background: #e65a4f;
+
+  #listOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  #listOverlay.show {
+    display: block;
+  }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 99999;
+    pointer-events: none;
+    font-size: 14px;
+  }
+
+  #toast.show {
+    opacity: 1;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .controls {
+      gap: 6px;
+    }
+    .controls select,
+    .controls input {
+      font-size: 12px;
+      padding: 6px 10px;
+      min-width: 80px;
+    }
+    .controls button {
+      font-size: 12px;
+      padding: 6px 12px;
+    }
+    #statsBar {
+      gap: 12px;
+      font-size: 12px;
+      padding: 10px 15px;
+    }
+    #statsBar .num {
+      font-size: 15px;
+    }
+    #myListPanel {
+      width: 100%;
+    }
+    #gridView {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+    .grid-item img {
+      height: 200px;
+    }
+    #modalContent {
+      padding: 15px;
+    }
+    #toggleTheme {
+      top: 10px;
+      right: 10px;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-top: 50px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #gridView {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .grid-item img {
+      height: 180px;
+    }
+    .grid-item .info h3 {
+      font-size: 0.8rem;
+    }
+    .grid-item .info p {
+      font-size: 0.7rem;
+    }
+    #tableView th,
+    #tableView td {
+      font-size: 11px;
+      padding: 6px 8px;
+    }
+    #tableView th:last-child,
+    #tableView td:last-child {
+      padding: 4px;
+    }
   }
 </style>
 </head>
 <body>
 
-<button id="toggleTheme" aria-label="Toggle dark/light mode">Light Mode</button>
+<button id="toggleTheme">Light Mode</button>
 
-<h1>Confirmed Upcoming Anime (2025–2026)</h1>
-<table id="animeTable" role="grid" aria-label="Upcoming anime list">
-  <thead>
-    <tr>
-      <th scope="col">Title</th>
-      <th scope="col">Type</th>
-      <th scope="col">Premiere Date / Status</th>
-      <th scope="col">Notes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr data-title="Call of the Night – Season 2" data-date="2025-07-04T00:00:00" tabindex="0">
-      <td>Call of the Night – Season 2</td>
-      <td>TV Anime</td>
-      <td>July 4, 2025</td>
-      <td>Noitamina block, HIDIVE streaming</td>
-    </tr>
-    <tr data-title="Rascal Does Not Dream of Santa Claus" data-date="2025-07-05T00:00:00" tabindex="0">
-      <td>Rascal Does Not Dream of Santa Claus</td>
-      <td>TV Anime</td>
-      <td>July 5, 2025</td>
-      <td>University Arc</td>
-    </tr>
-    <tr data-title="Kaiju No. 8 – Season 2" data-date="2025-07-19T00:00:00" tabindex="0">
-      <td>Kaiju No. 8 – Season 2</td>
-      <td>TV Anime</td>
-      <td>July 19, 2025</td>
-      <td>Crunchyroll & X streaming globally</td>
-    </tr>
-    <tr data-title="My Dress-Up Darling – Season 2" data-date="2025-07-01T00:00:00" tabindex="0">
-      <td>My Dress-Up Darling – Season 2</td>
-      <td>TV Anime</td>
-      <td>July 2025 (TBA)</td>
-      <td>Marin returns</td>
-    </tr>
-    <tr data-title="Makeine: Too Many Losing Heroines! – Season 2" data-date="" tabindex="0">
-      <td>Makeine: Too Many Losing Heroines! – Season 2</td>
-      <td>TV Anime</td>
-      <td>Confirmed, Release TBA</td>
-      <td>Officially announced April 2025</td>
-    </tr>
-    <tr data-title="Tokyo Revengers – Season 4" data-date="" tabindex="0">
-      <td>Tokyo Revengers – Season 4</td>
-      <td>TV Anime</td>
-      <td>Announced, Release TBD</td>
-      <td>Santen Senso Arc, in production</td>
-    </tr>
-    <tr data-title="Re:Zero – Season 4" data-date="2026-01-01T00:00:00" tabindex="0">
-      <td>Re:Zero – Season 4</td>
-      <td>TV Anime</td>
-      <td>2026 (confirmed)</td>
-      <td>Arc 6 “Corridor of Memories”</td>
-    </tr>
-    <tr data-title="The Eminence in Shadow: Lost Echoes" data-date="" tabindex="0">
-      <td>The Eminence in Shadow: Lost Echoes</td>
-      <td>Movie</td>
-      <td>TBA</td>
-      <td>Continuation of Season 2</td>
-    </tr>
-    <tr data-title="Frieren: Beyond Journey’s End – Season 2" data-date="2026-01-15T00:00:00" tabindex="0">
-      <td>Frieren: Beyond Journey’s End – Season 2</td>
-      <td>TV Anime</td>
-      <td>January 2026</td>
-      <td>Continuing Northern Travels arc</td>
-    </tr>
-    <tr data-title="Rent-A-Girlfriend – Season 4" data-date="2025-07-05T00:00:00" tabindex="0">
-      <td>Rent-A-Girlfriend – Season 4</td>
-      <td>TV Anime</td>
-      <td>July 5, 2025</td>
-      <td>Split cours, returning director Kazuomi Koga</td>
-    </tr>
-    <tr data-title="One Punch Man – Season 3" data-date="" tabindex="0">
-      <td>One Punch Man – Season 3</td>
-      <td>TV Anime</td>
-      <td>Confirmed, Release TBA</td>
-      <td>JC Staff confirmed production in 2023</td>
-    </tr>
-    <tr data-title="Chainsaw Man – Season 2" data-date="2025-01-01T00:00:00" tabindex="0">
-      <td>Chainsaw Man – Season 2</td>
-      <td>TV Anime</td>
-      <td>2025</td>
-      <td>MAPPA announced Season 2 in July 2022</td>
-    </tr>
-    <tr data-title="Jujutsu Kaisen – Season 3" data-date="2026-01-01T00:00:00" tabindex="0">
-      <td>Jujutsu Kaisen – Season 3</td>
-      <td>TV Anime</td>
-      <td>2026</td>
-      <td>MAPPA, adapting Culling Game arc</td>
-    </tr>
-    <tr data-title="Demon Slayer – Final Arc" data-date="2024-12-31T00:00:00" tabindex="0">
-      <td>Demon Slayer – Final Arc</td>
-      <td>TV Anime</td>
-      <td>2024–2025</td>
-      <td>Continuing final story arcs</td>
-    </tr>
-    <tr data-title="Spy x Family – Season 3" data-date="2025-10-01T00:00:00" tabindex="0">
-      <td>Spy x Family – Season 3</td>
-      <td>TV Anime</td>
-      <td>October 2025</td>
-      <td>Wit Studio & CloverWorks, 12 episodes</td>
-    </tr>
-    <tr data-title="Classroom of the Elite – Season 4" data-date="2025-12-15T00:00:00" tabindex="0">
-      <td>Classroom of the Elite – Season 4</td>
-      <td>TV Anime</td>
-      <td>Late 2025 / Early 2026</td>
-      <td>Lerche, Second-year arc</td>
-    </tr>
-    <tr data-title="Hell’s Paradise – Season 2" data-date="2026-01-10T00:00:00" tabindex="0">
-      <td>Hell’s Paradise – Season 2</td>
-      <td>TV Anime</td>
-      <td>January 2026</td>
-      <td>MAPPA, adaptation of the Hōrai Arc</td>
-    </tr>
-  </tbody>
-  <caption>Compiled &amp; updated by Kyle</caption>
-</table>
+<h1>📺 Upcoming Anime (2025–2026)</h1>
+
+<!-- Controls -->
+<div class="controls">
+  <div class="view-toggle">
+    <button id="viewTable" class="active">📋 Table</button>
+    <button id="viewGrid">🎴 Grid</button>
+  </div>
+  <input type="text" id="searchInput" placeholder="🔍 Search..." style="width:150px;">
+  <select id="genreFilter">
+    <option value="all">All Genres</option>
+    <option value="Action">⚔️ Action</option>
+    <option value="Adventure">🗺️ Adventure</option>
+    <option value="Comedy">😂 Comedy</option>
+    <option value="Drama">🎭 Drama</option>
+    <option value="Fantasy">🐉 Fantasy</option>
+    <option value="Horror">👻 Horror</option>
+    <option value="Mystery">🔍 Mystery</option>
+    <option value="Romance">💕 Romance</option>
+    <option value="Sci-Fi">🚀 Sci-Fi</option>
+    <option value="Slice of Life">🌸 Slice of Life</option>
+    <option value="Sports">⚽ Sports</option>
+    <option value="Thriller">🔪 Thriller</option>
+  </select>
+  <select id="yearFilter">
+    <option value="all">All Years</option>
+    <option value="2025">2025</option>
+    <option value="2026">2026</option>
+    <option value="2027">2027</option>
+  </select>
+  <select id="sortOptions">
+    <option value="popularity">🔥 Popularity</option>
+    <option value="score">⭐ Score</option>
+    <option value="date">📅 Date</option>
+    <option value="title">🔤 Title</option>
+  </select>
+  <button id="langToggle">🇯🇵 日本語</button>
+  <button id="myListBtn">❤️ List (<span id="listCount">0</span>)</button>
+  <button id="exportBtn">📥 CSV</button>
+</div>
+
+<!-- Stats Bar -->
+<div id="statsBar">
+  <span>📊 Total: <span class="num" id="statTotal">0</span></span>
+  <span>⏳ This Month: <span class="num" id="statMonth">0</span></span>
+  <span>🎬 Movies: <span class="num" id="statMovies">0</span></span>
+  <span>📺 TV: <span class="num" id="statTV">0</span></span>
+  <span>⭐ Avg Score: <span class="num" id="statScore">0</span></span>
+</div>
+
+<!-- Loading -->
+<div id="loading" class="loading">⏳ Loading upcoming anime...</div>
+
+<!-- Table View -->
+<div id="tableView" style="display:none;">
+  <table>
+    <thead>
+      <tr>
+        <th data-sort="title">Title ⬍</th>
+        <th data-sort="type">Type</th>
+        <th data-sort="date">Premiere Date</th>
+        <th data-sort="score">Score</th>
+        <th>Save</th>
+      </tr>
+    </thead>
+    <tbody id="animeBody"></tbody>
+  </table>
+</div>
+
+<!-- Grid View -->
+<div id="gridView"></div>
+
+<!-- Pagination -->
+<div id="pagination"></div>
 
 <!-- Modal -->
-<div id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+<div id="modal">
   <div id="modalContent">
     <h2 id="modalTitle"></h2>
-    <p id="modalDesc"></p>
-    <button id="closeBtn" aria-label="Close countdown popup">Close</button>
+    <div id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="save-modal" id="modalSaveBtn">💾 Save to List</button>
+      <button class="share-modal" id="modalShareBtn">📤 Share</button>
+      <button class="close-modal" id="closeBtn">✕ Close</button>
+    </div>
   </div>
 </div>
 
+<!-- My List Panel -->
+<div id="listOverlay"></div>
+<div id="myListPanel">
+  <h2>❤️ My List</h2>
+  <div id="listItems"></div>
+  <button class="close-list" id="closeListBtn">✕ Close</button>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
 <script>
+  // ===== STATE =====
+  let allAnime = [];
+  let filteredAnime = [];
+  let currentPage = 1;
+  const perPage = 20;
+  let currentLang = 'english';
+  let currentView = 'table';
+  let myList = JSON.parse(localStorage.getItem('animeMyList') || '[]');
+
+  // ===== DOM REFS =====
   const toggleBtn = document.getElementById('toggleTheme');
   const body = document.body;
+  const loading = document.getElementById('loading');
+  const tableView = document.getElementById('tableView');
+  const gridView = document.getElementById('gridView');
+  const animeBody = document.getElementById('animeBody');
+  const viewTable = document.getElementById('viewTable');
+  const viewGrid = document.getElementById('viewGrid');
+  const langToggle = document.getElementById('langToggle');
+  const searchInput = document.getElementById('searchInput');
+  const genreFilter = document.getElementById('genreFilter');
+  const yearFilter = document.getElementById('yearFilter');
+  const sortOptions = document.getElementById('sortOptions');
+  const pagination = document.getElementById('pagination');
   const modal = document.getElementById('modal');
   const modalTitle = document.getElementById('modalTitle');
-  const modalDesc = document.getElementById('modalDesc');
+  const modalBody = document.getElementById('modalBody');
   const closeBtn = document.getElementById('closeBtn');
+  const modalSaveBtn = document.getElementById('modalSaveBtn');
+  const modalShareBtn = document.getElementById('modalShareBtn');
+  const myListBtn = document.getElementById('myListBtn');
+  const listCount = document.getElementById('listCount');
+  const listItems = document.getElementById('listItems');
+  const closeListBtn = document.getElementById('closeListBtn');
+  const listOverlay = document.getElementById('listOverlay');
+  const myListPanel = document.getElementById('myListPanel');
+  const exportBtn = document.getElementById('exportBtn');
+  const toast = document.getElementById('toast');
 
-  // Set initial mode based on saved preference or default dark
-  if(localStorage.getItem('theme') === 'light') {
+  const statTotal = document.getElementById('statTotal');
+  const statMonth = document.getElementById('statMonth');
+  const statMovies = document.getElementById('statMovies');
+  const statTV = document.getElementById('statTV');
+  const statScore = document.getElementById('statScore');
+
+  let currentModalAnime = null;
+
+  // ===== THEME =====
+  if (localStorage.getItem('theme') === 'light') {
     body.classList.add('light');
     toggleBtn.textContent = 'Dark Mode';
   }
 
   toggleBtn.addEventListener('click', () => {
     body.classList.toggle('light');
-    if(body.classList.contains('light')) {
-      toggleBtn.textContent = 'Dark Mode';
-      localStorage.setItem('theme', 'light');
+    toggleBtn.textContent = body.classList.contains('light') ? 'Dark Mode' : 'Light Mode';
+    localStorage.setItem('theme', body.classList.contains('light') ? 'light' : 'dark');
+  });
+
+  // ===== VIEW TOGGLE =====
+  viewTable.addEventListener('click', () => {
+    viewTable.classList.add('active');
+    viewGrid.classList.remove('active');
+    currentView = 'table';
+    tableView.style.display = 'block';
+    gridView.style.display = 'none';
+    renderCurrentView();
+  });
+
+  viewGrid.addEventListener('click', () => {
+    viewGrid.classList.add('active');
+    viewTable.classList.remove('active');
+    currentView = 'grid';
+    tableView.style.display = 'none';
+    gridView.style.display = 'grid';
+    renderCurrentView();
+  });
+
+  // ===== LANGUAGE TOGGLE =====
+  langToggle.addEventListener('click', () => {
+    if (currentLang === 'english') {
+      currentLang = 'romaji';
+      langToggle.textContent = '🇬🇧 English';
     } else {
-      toggleBtn.textContent = 'Light Mode';
-      localStorage.setItem('theme', 'dark');
+      currentLang = 'english';
+      langToggle.textContent = '🇯🇵 日本語';
+    }
+    renderCurrentView();
+  });
+
+  function getTitle(anime) {
+    if (currentLang === 'romaji') {
+      return anime.title?.romaji || anime.title?.english || 'Unknown';
+    }
+    return anime.title?.english || anime.title?.romaji || 'Unknown';
+  }
+
+  // ===== MY LIST =====
+  function updateListUI() {
+    listCount.textContent = myList.length;
+    localStorage.setItem('animeMyList', JSON.stringify(myList));
+    renderListItems();
+  }
+
+  function toggleSave(anime) {
+    const id = anime.id;
+    const idx = myList.indexOf(id);
+    if (idx > -1) {
+      myList.splice(idx, 1);
+      showToast('❌ Removed from list');
+    } else {
+      myList.push(id);
+      showToast('✅ Added to list!');
+    }
+    updateListUI();
+    renderCurrentView();
+  }
+
+  function isSaved(id) {
+    return myList.includes(id);
+  }
+
+  function renderListItems() {
+    listItems.innerHTML = '';
+    if (myList.length === 0) {
+      listItems.innerHTML = '<p style="color:#888;text-align:center;">No anime saved yet.</p>';
+      return;
+    }
+    myList.forEach(id => {
+      const anime = allAnime.find(a => a.id === id);
+      if (!anime) return;
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      const title = getTitle(anime);
+      div.innerHTML = `
+        <span>${title}</span>
+        <button onclick="removeFromList(${id})">Remove</button>
+      `;
+      listItems.appendChild(div);
+    });
+  }
+
+  function removeFromList(id) {
+    myList = myList.filter(i => i !== id);
+    updateListUI();
+    renderCurrentView();
+    showToast('❌ Removed from list');
+  }
+
+  myListBtn.addEventListener('click', () => {
+    myListPanel.classList.toggle('show');
+    listOverlay.classList.toggle('show');
+    renderListItems();
+  });
+
+  closeListBtn.addEventListener('click', () => {
+    myListPanel.classList.remove('show');
+    listOverlay.classList.remove('show');
+  });
+
+  listOverlay.addEventListener('click', () => {
+    myListPanel.classList.remove('show');
+    listOverlay.classList.remove('show');
+  });
+
+  // ===== TOAST =====
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast.timeout);
+    toast.timeout = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  // ===== EXPORT CSV =====
+  exportBtn.addEventListener('click', () => {
+    if (filteredAnime.length === 0) {
+      showToast('No data to export');
+      return;
+    }
+    let csv = 'Title,Type,Date,Score,Status\n';
+    filteredAnime.forEach(a => {
+      const title = getTitle(a);
+      const type = a.format || 'TV';
+      let date = 'TBA';
+      if (a.startDate?.year) {
+        date = `${a.startDate.year}-${String(a.startDate.month || 1).padStart(2, '0')}-${String(a.startDate.day || 1).padStart(2, '0')}`;
+      }
+      const score = a.averageScore || 'N/A';
+      const status = a.status || 'TBA';
+      csv += `"${title}",${type},${date},${score},${status}\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'anime_list.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('📥 CSV exported!');
+  });
+
+  // ===== SHARE =====
+  modalShareBtn.addEventListener('click', () => {
+    if (!currentModalAnime) return;
+    const title = getTitle(currentModalAnime);
+    const url = `https://anilist.co/anime/${currentModalAnime.id}`;
+    if (navigator.share) {
+      navigator.share({
+        title: title,
+        text: `Check out ${title}!`,
+        url: url
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(`${title} - ${url}`).then(() => {
+        showToast('📤 Link copied to clipboard!');
+      });
     }
   });
 
-  // Countdown function
+  // ===== COUNTDOWN =====
   function getCountdown(targetDate) {
     const now = new Date();
     const diff = targetDate - now;
-    if(diff <= 0) return null;
-
+    if (diff <= 0) return null;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
     const minutes = Math.floor((diff / (1000 * 60)) % 60);
     const seconds = Math.floor((diff / 1000) % 60);
-
     return { days, hours, minutes, seconds };
   }
 
-  // Open modal with countdown
-  // Inside your existing openModal function, add extra info:
+  // ===== MODAL =====
+  function openModal(anime) {
+    currentModalAnime = anime;
+    const title = getTitle(anime);
+    modalTitle.textContent = title;
+    modalBody.innerHTML = '';
 
-function openModal(title, dateStr, imgUrl, trailerUrl) {
-  modalTitle.textContent = title;
-  // Clear old content
-  modalDesc.innerHTML = "";
-  
-  if(imgUrl) {
-    const img = document.createElement('img');
-    img.src = imgUrl;
-    img.alt = `${title} poster`;
-    img.style.maxWidth = '100%';
-    img.style.borderRadius = '8px';
-    modalDesc.appendChild(img);
-  }
-  
-  // Countdown text (existing code)
-  if(!dateStr) {
-    modalDesc.appendChild(document.createTextNode("Release date not announced yet."));
-  } else {
-    let targetDate = new Date(dateStr);
-    if(isNaN(targetDate.getTime())) {
-      modalDesc.appendChild(document.createTextNode("Release date not announced yet."));
-    } else {
-      // Show countdown
-      const countdownEl = document.createElement('p');
-      modalDesc.appendChild(countdownEl);
-      function updateCountdown() {
-        const cd = getCountdown(targetDate);
-        if(!cd) {
-          countdownEl.textContent = "Released or airing now!";
-          clearInterval(modal.countdownInterval);
-          return;
-        }
-        countdownEl.textContent = `Countdown: ${cd.days}d ${cd.hours}h ${cd.minutes}m ${cd.seconds}s`;
-      }
-      updateCountdown();
-      modal.countdownInterval = setInterval(updateCountdown, 1000);
-
-      // Add Set Reminder button
-      const reminderBtn = document.createElement('button');
-      reminderBtn.textContent = 'Set Reminder 🔔';
-      reminderBtn.style.marginTop = '10px';
-      reminderBtn.style.padding = '8px 15px';
-      reminderBtn.style.cursor = 'pointer';
-      reminderBtn.style.borderRadius = '20px';
-      reminderBtn.style.border = 'none';
-      reminderBtn.style.backgroundColor = 'var(--accent)';
-      reminderBtn.style.color = 'var(--table-header-text)';
-      reminderBtn.onclick = () => {
-        if (!("Notification" in window)) {
-          alert("This browser does not support notifications.");
-          return;
-        }
-        if (Notification.permission === "granted") {
-          scheduleNotification(title, targetDate);
-        } else if (Notification.permission !== "denied") {
-          Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-              scheduleNotification(title, targetDate);
-            } else {
-              alert("Notification permission denied.");
-            }
-          });
-        } else {
-          alert("Notification permission denied.");
-        }
-      };
-      modalDesc.appendChild(reminderBtn);
+    // Image
+    if (anime.coverImage?.large) {
+      const img = document.createElement('img');
+      img.className = 'modal-img';
+      img.src = anime.coverImage.large;
+      img.alt = title;
+      img.onerror = () => img.style.display = 'none';
+      modalBody.appendChild(img);
     }
+
+    // Info
+    let info = '';
+    if (anime.averageScore) info += `⭐ Score: ${anime.averageScore}% | `;
+    if (anime.episodes) info += `📺 Episodes: ${anime.episodes} | `;
+    if (anime.genres && anime.genres.length) info += `🎭 ${anime.genres.slice(0, 3).join(', ')}`;
+    if (info) {
+      const p = document.createElement('p');
+      p.textContent = info;
+      p.style.fontSize = '0.9rem';
+      p.style.color = '#aaa';
+      p.style.margin = '5px 0';
+      modalBody.appendChild(p);
+    }
+
+    // Description
+    if (anime.description) {
+      const desc = document.createElement('p');
+      desc.textContent = anime.description.replace(/<[^>]*>/g, '').slice(0, 400) + '...';
+      desc.style.fontSize = '0.95rem';
+      desc.style.lineHeight = '1.5';
+      modalBody.appendChild(desc);
+    }
+
+    // Date & Countdown
+    if (anime.startDate?.year) {
+      const m = String(anime.startDate.month || 1).padStart(2, '0');
+      const d = String(anime.startDate.day || 1).padStart(2, '0');
+      const dateStr = `${anime.startDate.year}-${m}-${d}`;
+      const targetDate = new Date(dateStr);
+      if (!isNaN(targetDate.getTime())) {
+        const cdEl = document.createElement('p');
+        cdEl.style.fontWeight = 'bold';
+        cdEl.style.color = 'var(--accent)';
+        cdEl.style.fontSize = '1.1rem';
+        modalBody.appendChild(cdEl);
+        function updateCD() {
+          const cd = getCountdown(targetDate);
+          if (!cd) {
+            cdEl.textContent = '🎉 Released or airing now!';
+            clearInterval(modal.cdInterval);
+            return;
+          }
+          cdEl.textContent = `⏱️ ${cd.days}d ${cd.hours}h ${cd.minutes}m ${cd.seconds}s`;
+        }
+        updateCD();
+        modal.cdInterval = setInterval(updateCD, 1000);
+      }
+    }
+
+    // Trailer (YouTube)
+    if (anime.trailer && anime.trailer.site === 'youtube' && anime.trailer.id) {
+      const container = document.createElement('div');
+      container.className = 'trailer-container';
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${anime.trailer.id}?autoplay=0&rel=0`;
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      container.appendChild(iframe);
+      modalBody.appendChild(container);
+    }
+
+    // Save button state
+    modalSaveBtn.textContent = isSaved(anime.id) ? '❤️ Saved' : '💾 Save to List';
+    modalSaveBtn.style.opacity = isSaved(anime.id) ? '1' : '0.8';
+
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
   }
 
-  // Trailer embed
-  if(trailerUrl) {
-    const trailerFrame = document.createElement('iframe');
-    trailerFrame.src = trailerUrl;
-    trailerFrame.width = '100%';
-    trailerFrame.height = '200';
-    trailerFrame.style.marginTop = '15px';
-    trailerFrame.setAttribute('allowfullscreen', '');
-    trailerFrame.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-    modalDesc.appendChild(trailerFrame);
-  }
+  modalSaveBtn.addEventListener('click', () => {
+    if (currentModalAnime) {
+      toggleSave(currentModalAnime);
+      modalSaveBtn.textContent = isSaved(currentModalAnime.id) ? '❤️ Saved' : '💾 Save to List';
+      modalSaveBtn.style.opacity = isSaved(currentModalAnime.id) ? '1' : '0.8';
+    }
+  });
 
-  modal.classList.add('show');
-}
-
-function scheduleNotification(title, targetDate) {
-  const now = new Date();
-  const delay = targetDate - now;
-  if (delay <= 0) {
-    alert("The premiere date has already passed!");
-    return;
-  }
-  alert(`Reminder set for ${title} on ${targetDate.toLocaleString()}. Keep this tab open!`);
-
-  setTimeout(() => {
-    new Notification(`${title} is premiering today!`);
-  }, delay);
-}
-  // Close modal
   function closeModal() {
     modal.classList.remove('show');
-    clearInterval(modal.countdownInterval);
+    clearInterval(modal.cdInterval);
+    currentModalAnime = null;
+    document.body.style.overflow = '';
   }
 
   closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => {
-    if(e.target === modal) closeModal();
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
   });
 
-  // Add click event to table rows
-  const rows = document.querySelectorAll('#animeTable tbody tr');
-  rows.forEach(row => {
-    row.addEventListener('click', () => {
-      const title = row.getAttribute('data-title');
-      const date = row.getAttribute('data-date');
-      openModal(title, date);
-    });
-    // Keyboard accessibility (Enter key)
-    row.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const title = row.getAttribute('data-title');
-        const date = row.getAttribute('data-date');
-        openModal(title, date);
+  // ===== FETCH ANIME =====
+  async function fetchAnime() {
+    const query = `
+      query {
+        Page(page: 1, perPage: 50) {
+          media(type: ANIME, status: NOT_YET_RELEASED, sort: POPULARITY_DESC) {
+            id
+            title { romaji english }
+            format
+            status
+            startDate { year month day }
+            coverImage { large }
+            description(asHtml: false)
+            averageScore
+            episodes
+            genres
+            trailer { site id }
+          }
+        }
       }
+    `;
+
+    try {
+      const res = await fetch('https://graphql.anilist.co', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
+      const data = await res.json();
+      if (data.errors) {
+        console.error('API Errors:', data.errors);
+        return null;
+      }
+      return data.data?.Page?.media || [];
+    } catch (err) {
+      console.error('Fetch error:', err);
+      return null;
+    }
+  }
+
+  // ===== FILTER & SORT =====
+  function filterAndSort() {
+    const search = searchInput.value.toLowerCase().trim();
+    const genre = genreFilter.value;
+    const year = yearFilter.value;
+    const sort = sortOptions.value;
+
+    let result = [...allAnime];
+
+    if (search) {
+      result = result.filter(a => {
+        const title = getTitle(a).toLowerCase();
+        return title.includes(search);
+      });
+    }
+
+    if (genre !== 'all') {
+      result = result.filter(a => a.genres && a.genres.includes(genre));
+    }
+
+    if (year !== 'all') {
+      result = result.filter(a => a.startDate?.year && String(a.startDate.year) === year);
+    }
+
+    switch (sort) {
+      case 'popularity': break;
+      case 'score':
+        result.sort((a, b) => (b.averageScore || 0) - (a.averageScore || 0));
+        break;
+      case 'date':
+        result.sort((a, b) => {
+          const da = a.startDate?.year || 9999;
+          const db = b.startDate?.year || 9999;
+          return da - db;
+        });
+        break;
+      case 'title':
+        result.sort((a, b) => getTitle(a).localeCompare(getTitle(b)));
+        break;
+    }
+
+    filteredAnime = result;
+    currentPage = 1;
+    updateStats();
+    renderCurrentView();
+  }
+
+  // ===== STATS =====
+  function updateStats() {
+    const now = new Date();
+    const thisMonth = now.getMonth();
+    const thisYear = now.getFullYear();
+
+    statTotal.textContent = filteredAnime.length;
+
+    const monthCount = filteredAnime.filter(a => {
+      return a.startDate?.year === thisYear && a.startDate?.month === thisMonth + 1;
+    }).length;
+    statMonth.textContent = monthCount;
+
+    const movies = filteredAnime.filter(a => a.format === 'MOVIE').length;
+    statMovies.textContent = movies;
+
+    const tv = filteredAnime.filter(a => a.format === 'TV' || a.format === 'TV_SHORT').length;
+    statTV.textContent = tv;
+
+    const scores = filteredAnime.filter(a => a.averageScore);
+    const avg = scores.length ? Math.round(scores.reduce((s, a) => s + a.averageScore, 0) / scores.length) : 0;
+    statScore.textContent = avg;
+  }
+
+  // ===== RENDER =====
+  function renderCurrentView() {
+    if (currentView === 'table') renderTable();
+    else renderGrid();
+    renderPagination();
+  }
+
+  function getPaginated() {
+    const start = (currentPage - 1) * perPage;
+    return filteredAnime.slice(start, start + perPage);
+  }
+
+  function renderTable() {
+    const pageData = getPaginated();
+    animeBody.innerHTML = '';
+    if (pageData.length === 0) {
+      animeBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">No anime found matching your filters.</td></tr>';
+      return;
+    }
+
+    pageData.forEach(anime => {
+      const tr = document.createElement('tr');
+      const title = getTitle(anime);
+      const formatMap = { 'TV': '📺 TV', 'TV_SHORT': '📺 Short', 'MOVIE': '🎬 Movie', 'OVA': '📀 OVA', 'ONA': '🌐 ONA', 'SPECIAL': '⭐ Special' };
+      const type = formatMap[anime.format] || anime.format || 'TV';
+
+      let dateStr = '⏳ TBA';
+      if (anime.startDate?.year) {
+        const m = String(anime.startDate.month || 1).padStart(2, '0');
+        const d = String(anime.startDate.day || 1).padStart(2, '0');
+        dateStr = `${anime.startDate.year}-${m}-${d}`;
+      }
+
+      const score = anime.averageScore ? `${anime.averageScore}%` : 'N/A';
+      const saved = isSaved(anime.id);
+
+      tr.innerHTML = `
+        <td>${title}</td>
+        <td>${type}</td>
+        <td>${dateStr}</td>
+        <td>${score}</td>
+        <td style="text-align:center;">
+          <button onclick="event.stopPropagation();toggleSave(${anime.id})" 
+                  style="background:none;border:none;cursor:pointer;font-size:20px;">
+            ${saved ? '❤️' : '🤍'}
+          </button>
+        </td>
+      `;
+
+      tr.addEventListener('click', () => openModal(anime));
+      tr.style.cursor = 'pointer';
+      animeBody.appendChild(tr);
+    });
+  }
+
+  function renderGrid() {
+    const pageData = getPaginated();
+    gridView.innerHTML = '';
+    if (pageData.length === 0) {
+      gridView.innerHTML = '<p style="text-align:center;grid-column:1/-1;padding:30px;">No anime found matching your filters.</p>';
+      return;
+    }
+
+    pageData.forEach(anime => {
+      const title = getTitle(anime);
+      const formatMap = { 'TV': '📺 TV', 'MOVIE': '🎬 Movie', 'OVA': '📀 OVA', 'ONA': '🌐 ONA', 'SPECIAL': '⭐ Special' };
+      const type = formatMap[anime.format] || anime.format || 'TV';
+
+      let dateStr = '⏳ TBA';
+      if (anime.startDate?.year) {
+        const m = String(anime.startDate.month || 1).padStart(2, '0');
+        const d = String(anime.startDate.day || 1).padStart(2, '0');
+        dateStr = `${anime.startDate.year}-${m}-${d}`;
+      }
+
+      const div = document.createElement('div');
+      div.className = 'grid-item card-bg';
+      const imgSrc = anime.coverImage?.large || 'https://via.placeholder.com/200x260/333/666?text=No+Image';
+
+      div.innerHTML = `
+        <img src="${imgSrc}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x260/333/666?text=No+Image'">
+        <button class="save-btn ${isSaved(anime.id) ? 'saved' : ''}" onclick="event.stopPropagation();toggleSave(${anime.id})">
+          ${isSaved(anime.id) ? '❤️' : '🤍'}
+        </button>
+        <div class="info">
+          <h3>${title}</h3>
+          <p>${type} · ${dateStr}</p>
+          ${anime.averageScore ? `<p>⭐ ${anime.averageScore}%</p>` : ''}
+        </div>
+      `;
+
+      div.addEventListener('click', () => openModal(anime));
+      gridView.appendChild(div);
+    });
+  }
+
+  function renderPagination() {
+    const totalPages = Math.ceil(filteredAnime.length / perPage);
+    pagination.innerHTML = '';
+    if (totalPages <= 1) return;
+
+    const maxVisible = 7;
+    let start = Math.max(1, currentPage - 3);
+    let end = Math.min(totalPages, start + maxVisible - 1);
+    if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1);
+
+    for (let i = start; i <= end; i++) {
+      const btn = document.createElement('button');
+      btn.textContent = i;
+      if (i === currentPage) btn.classList.add('active');
+      btn.addEventListener('click', () => {
+        currentPage = i;
+        renderCurrentView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      pagination.appendChild(btn);
+    }
+  }
+
+  // ===== EVENT LISTENERS =====
+  searchInput.addEventListener('input', filterAndSort);
+  genreFilter.addEventListener('change', filterAndSort);
+  yearFilter.addEventListener('change', filterAndSort);
+  sortOptions.addEventListener('change', filterAndSort);
+
+  // ===== TABLE HEADER SORT =====
+  document.querySelectorAll('#tableView th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const sort = th.dataset.sort;
+      if (sort === 'title') sortOptions.value = 'title';
+      else if (sort === 'date') sortOptions.value = 'date';
+      else if (sort === 'score') sortOptions.value = 'score';
+      else if (sort === 'type') sortOptions.value = 'title';
+      filterAndSort();
     });
   });
+
+  // ===== INIT =====
+  async function init() {
+    loading.style.display = 'block';
+    const data = await fetchAnime();
+
+    if (!data || data.length === 0) {
+      loading.innerHTML = `
+        ❌ Failed to load. 
+        <br><br>
+        <button onclick="location.reload()" style="padding:10px 20px;background:#ff6f61;border:none;border-radius:25px;color:white;cursor:pointer;font-size:16px;">
+          🔄 Refresh
+        </button>
+      `;
+      return;
+    }
+
+    allAnime = data;
+    filteredAnime = data;
+    loading.style.display = 'none';
+    tableView.style.display = 'block';
+
+    updateListUI();
+    filterAndSort();
+  }
+
+  // Expose functions globally
+  window.toggleSave = toggleSave;
+  window.removeFromList = removeFromList;
+  window.isSaved = isSaved;
+
+  init();
 </script>
 
 </body>
